@@ -1,12 +1,12 @@
 'use client';
 
-import { useMemo, useState, type FormEvent } from 'react';
+import { Suspense, useMemo, useState, type FormEvent } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { getInsforgeClient } from '@/lib/insforgeClient';
 
 type Mode = 'link' | 'code';
 
-export default function ResetPasswordPage() {
+function ResetPasswordInner() {
   const router = useRouter();
   const params = useSearchParams();
   const insforge = useMemo(() => getInsforgeClient(), []);
@@ -200,5 +200,20 @@ export default function ResetPasswordPage() {
         </a>
       </div>
     </main>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="max-w-md mx-auto px-4 py-16">
+          <h1 className="text-2xl font-bold mb-2">Reset password</h1>
+          <p className="text-gray-600 text-sm">Loading...</p>
+        </main>
+      }
+    >
+      <ResetPasswordInner />
+    </Suspense>
   );
 }

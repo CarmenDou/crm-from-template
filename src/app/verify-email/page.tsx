@@ -1,10 +1,10 @@
 'use client';
 
-import { useMemo, useState, type FormEvent } from 'react';
+import { Suspense, useMemo, useState, type FormEvent } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { getInsforgeClient } from '@/lib/insforgeClient';
 
-export default function VerifyEmailPage() {
+function VerifyEmailInner() {
   const router = useRouter();
   const params = useSearchParams();
   const insforge = useMemo(() => getInsforgeClient(), []);
@@ -109,5 +109,20 @@ export default function VerifyEmailPage() {
         </a>
       </form>
     </main>
+  );
+}
+
+export default function VerifyEmailPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="max-w-md mx-auto px-4 py-16">
+          <h1 className="text-2xl font-bold mb-2">Verify email</h1>
+          <p className="text-gray-600 text-sm">Loading...</p>
+        </main>
+      }
+    >
+      <VerifyEmailInner />
+    </Suspense>
   );
 }
